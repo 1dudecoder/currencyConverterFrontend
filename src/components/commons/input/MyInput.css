@@ -1,0 +1,23 @@
+.input-class input {
+  font-size: 2rem;
+  border: 0px;
+  font-size: 9rem;
+  width: 20rem;
+  /* background-color: rgb(249, 244, 244); */
+  z-index: -1;
+}
+
+.input-class input:focus {
+  outline: none;
+}
+
+.input-class {
+  border: 0px;
+  width: fit-content;
+  width: 20rem;
+  overflow: scroll;
+}
+
+.input-class::-webkit-scrollbar {
+  display: none;
+}

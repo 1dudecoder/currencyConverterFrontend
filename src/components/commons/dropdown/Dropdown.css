@@ -1,0 +1,86 @@
+.main-container {
+  width: 100%;
+  position: relative;
+}
+
+.drop-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid rgb(255, 225, 225);
+  width: 100%;
+  padding: 2px;
+}
+.sym-avatar {
+  overflow: hidden;
+  margin-left: 70px;
+  margin-right: 15px;
+}
+
+.sym-avatar img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.drop-search input {
+  width: 100%;
+  height: 1.7rem;
+  border: 0px solid;
+  padding: 2px;
+}
+.drop-search input:focus {
+  outline: none;
+}
+
+.drop-search {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 2px;
+  position: absolute;
+  width: 20rem;
+  z-index: 4;
+}
+
+.drop-input {
+  width: 100%;
+  padding-left: 5px;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-func {
+  display: flex;
+  flex-direction: row;
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+}
+
+.options {
+  padding-left: 5px;
+  margin-top: 5px;
+}
+
+.options-height::-webkit-scrollbar {
+  display: none;
+}
+
+.options-height {
+  height: 10rem;
+  overflow: scroll;
+  background-color: red;
+  scroll-behavior: smooth;
+}
+
+.arrow-image {
+  margin-right: 5px;
+}
+
+.currency {
+  margin-right: 5px;
+  padding-left: 5px;
+}

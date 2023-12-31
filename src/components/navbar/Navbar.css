@@ -1,0 +1,28 @@
+.nav-container {
+  width: 100%;
+  height: 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: 1%;
+  font-size: larger;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 30%;
+  opacity: 0.7;
+}
+
+.nav-buttons p {
+  padding-inline: 5%;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.nav-soucecode {
+  /* opacity: 0.7; */
+  /* padding-right: 15px; */
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
