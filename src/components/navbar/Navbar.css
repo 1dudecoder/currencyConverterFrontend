@@ -6,6 +6,7 @@
   align-items: center;
   padding-inline: 1%;
   font-size: larger;
+  border-bottom: 0.2px solid #80808014;
 }
 
 .nav-buttons {

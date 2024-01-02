@@ -1,10 +1,18 @@
-import React from "react";
-import sym from "../../../assets/Flag.png";
+import React, { useState } from "react";
 import downarrow from "../../../assets/down-arrow.png";
 import searchicon from "../../../assets/searchimg.png";
 import "./Dropdown.css";
 
-function Dropdown({ heading, options, showsearchbar, setshowSearchbar }) {
+function Dropdown({
+  heading,
+  options,
+  showsearchbar,
+  setshowSearchbar,
+  setSourcecurrency,
+  handleitemclicked,
+  setTargetCurrency,
+  id,
+}) {
   const handleShowdrop = () => {
     if (showsearchbar == true) {
       setshowSearchbar(false);
@@ -12,19 +20,47 @@ function Dropdown({ heading, options, showsearchbar, setshowSearchbar }) {
       setshowSearchbar(true);
     }
   };
+
+  const handleclickitem = (item) => {
+    setCurrencyName(item.name);
+    console.log(id, item.symbol);
+    if (id == 1) {
+      setSourcecurrency((data) => {
+        return item;
+      });
+    }
+
+    if (id == 2) {
+      setTargetCurrency((data) => {
+        return item;
+      });
+    }
+
+    setshowSearchbar(false);
+    handleitemclicked();
+  };
+
+  const [currencyname, setCurrencyName] = useState();
   return (
     <>
-      <p>{heading}</p>
       <div className="main-container">
+        <p>{heading}</p>
         <div className="drop-container" onClick={handleShowdrop}>
           <div className="currency">
-            <p>GBP - BRITESTH POUND </p>
+            {<p>{!currencyname ? options[0]?.id : currencyname}</p>}
           </div>
-          <div className="sym-avatar">
-            <img src={sym} alt="usd-flag" height={30} width={30} />
-          </div>
-          <div className="arrow-image">
-            <img src={downarrow} alt="downarrow" height={15} width={15} />
+          <div className="my-icons">
+            <div className="sym-avatar">
+              <img
+                src={options[0]?.image}
+                alt="usd-flag"
+                height={30}
+                width={30}
+              />
+            </div>
+            <div className="arrow-image">
+              <img src={downarrow} alt="downarrow" height={15} width={15} />
+            </div>
           </div>
         </div>
         <div
@@ -39,16 +75,30 @@ function Dropdown({ heading, options, showsearchbar, setshowSearchbar }) {
               <input type="text" placeholder="search currency" />
             </div>
           </div>
+
           <div className="options-height">
-            {options &&
-              options.map((item) => {
-                return (
-                  <>
-                    <hr />
-                    <p className="options">{item}</p>
-                  </>
-                );
-              })}
+            {options.map((item) => {
+              return (
+                <>
+                  <div
+                    className="item-row"
+                    onClick={() => {
+                      handleclickitem(item);
+                    }}
+                  >
+                    <div className="items">{item.name}</div>
+                    <div className="search-icon">
+                      <img
+                        src={item.image}
+                        alt="searchicon"
+                        width={15}
+                        height={15}
+                      />
+                    </div>
+                  </div>
+                </>
+              );
+            })}
           </div>
         </div>
       </div>

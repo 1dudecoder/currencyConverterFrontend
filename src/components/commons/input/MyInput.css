@@ -1,7 +1,8 @@
 .input-class input {
   font-size: 2rem;
   border: 0px;
-  font-size: 9rem;
+  font-size: 7rem;
+  font-family: none;
   width: 20rem;
   /* background-color: rgb(249, 244, 244); */
   z-index: -1;

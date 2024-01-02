@@ -1,10 +1,10 @@
 import React from "react";
 import "./MyInput.css";
 
-function MyInput({ data }) {
+function MyInput({ setSelectamount, selectamount, handleChange }) {
   return (
     <div className="input-class">
-      <input type="text" value={10} />
+      <input type="text" value={selectamount} onChange={handleChange} />
     </div>
   );
 }

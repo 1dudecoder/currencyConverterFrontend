@@ -1,29 +1,99 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar } from "../../components";
+import { CoinGeckoDataFetcher } from "../../services";
+import { Dropdown, MyInput } from "../../components/commons";
 import "./Home.css";
-import Dropdown from "../../components/commons/dropdown/Dropdown";
-import MyInput from "../../components/commons/input/MyInput";
-import ApexChartComponent from "./ApexChartComponent";
-import CoinGeckoDataFetcher from "./CoinGeckoDataFetcher";
+import { mydata } from "../../constants/mydata";
+import { useFetch } from "../../hooks/index";
 
 function Home() {
-  const options = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 4",
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 4",
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 4",
-  ];
+  const [showSource, setshowSource] = useState(false);
+  const [targetCurrency, setTargetCurrency] = useState({
+    symbol: "BTC",
+  });
+  const [sourcecurrency, setSourcecurrency] = useState({
+    symbol: "BTC",
+  });
+  const [showTarget, setshowTarget] = useState(false);
+  const [dropdata, setDropdown] = useState([]);
+  const [selectamount, setSelectamount] = useState("1");
+  const [convertedamount, setConvertedamount] = useState("1");
+  const [sourcetargetcurrentPrice, setsourcetargetcurrentPrice] = useState({
+    source: 0,
+    target: 0,
+  });
 
-  const [showsearchbar1, setshowSearchbar1] = useState(false);
-  const [showsearchbar2, setshowSearchbar2] = useState(false);
+  const { loading, error, data } = useFetch(
+    "http://localhost:3000/api/v1/top/100"
+  );
+
+  const convertFun = async (myamount, mysource, mytarget) => {
+    try {
+      const apiUrl = "http://localhost:3000/api/v1/convert";
+      const sourceCrypto = mysource;
+      const amount = myamount;
+      const targetCurrency = mytarget;
+
+      const response = await fetch(
+        `${apiUrl}?sourceCrypto=${sourceCrypto}&amount=${amount}&targetCurrency=${targetCurrency}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response?.json();
+      setConvertedamount(data.data.convertedAmount);
+      setsourcetargetcurrentPrice({
+        source: data.data.sourceCryptoPriceUSD,
+        target: data.data.targetCurrencyRateUSD,
+      });
+      console.log(data.data, "----->");
+    } catch (error) {
+      console.error("Error in convertFun:", error.message);
+    }
+  };
+
+  const throttle = (func, delay) => {
+    let lastCall = 0;
+    return function (...args) {
+      const now = Date.now();
+      if (now - lastCall >= delay) {
+        func(...args);
+        lastCall = now;
+      }
+    };
+  };
+
+  const throttledConvertFun = throttle(convertFun, 300);
+
+  const handlAmountchange = (e) => {
+    let amount = e.target.value;
+    let mysource = sourcecurrency.symbol + "";
+    let mytarget = targetCurrency.symbol + "";
+    setSelectamount(e.target.value);
+    throttledConvertFun(amount, mysource.toUpperCase(), mytarget.toUpperCase());
+  };
+
+  const handleitemclicked = () => {
+    let amount = selectamount;
+    let mysource = sourcecurrency.symbol + "";
+    let mytarget = targetCurrency.symbol + "";
+    throttledConvertFun(amount, mysource.toUpperCase(), mytarget.toUpperCase());
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (data) {
+        console.log(data, "----data");
+        setDropdown(data);
+      } else {
+        setDropdown(mydata);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="home-container">
@@ -40,13 +110,22 @@ function Home() {
         <div className="my-inputs">
           <div className="drop-downs">
             <Dropdown
-              options={options}
+              options={dropdata}
               heading={"From"}
-              showsearchbar={showsearchbar1}
-              setshowSearchbar={setshowSearchbar1}
+              showsearchbar={showSource}
+              setshowSearchbar={setshowSource}
+              sourcecurrency={sourcecurrency}
+              setSourcecurrency={setSourcecurrency}
+              handleitemclicked={handleitemclicked}
+              setTargetCurrency={setTargetCurrency}
+              id={1}
             />
             <div className="input-data">
-              <MyInput data={"100"} />
+              <MyInput
+                setSelectamount={setSelectamount}
+                selectamount={selectamount}
+                handleChange={handlAmountchange}
+              />
             </div>
           </div>
         </div>
@@ -54,23 +133,44 @@ function Home() {
         <div className="my-inputs">
           <div className="drop-downs">
             <Dropdown
-              options={options}
+              options={dropdata}
               heading={"To"}
-              showsearchbar={showsearchbar2}
-              setshowSearchbar={setshowSearchbar2}
+              showsearchbar={showTarget}
+              setshowSearchbar={setshowTarget}
+              sourcecurrency={targetCurrency}
+              setSourcecurrency={setTargetCurrency}
+              handleitemclicked={handleitemclicked}
+              setTargetCurrency={setTargetCurrency}
+              id={2}
             />
             <div className="input-data">
-              <MyInput data={"100"} />
+              <MyInput
+                selectamount={convertedamount}
+                handleChange={handlAmountchange}
+              />
             </div>
           </div>
         </div>
       </div>
 
       <div className="my-chart">
+        <div className="my-status">
+          <div className="totalcal">
+            <div>
+              <p>Source Price</p>
+              <h1>{sourcetargetcurrentPrice.source.toFixed(1)}</h1>
+            </div>
+            <div>
+              <p>Target Price</p>
+              <h1>{sourcetargetcurrentPrice.target.toFixed(1)}</h1>
+            </div>
+          </div>
+          <div></div>
+        </div>
         <CoinGeckoDataFetcher />
       </div>
     </div>
   );
 }
 
-export default Home;
+export default React.memo(Home);

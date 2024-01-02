@@ -1,7 +1,6 @@
-// CoinGeckoDataFetcher.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import ApexChartComponent from "./ApexChartComponent";
+import { ApexChartComponent } from "../../components";
 
 const CoinGeckoDataFetcher = () => {
   const [chartData, setChartData] = useState([]);
@@ -19,18 +18,15 @@ const CoinGeckoDataFetcher = () => {
             },
           }
         );
-        console.log(response, "response---");
         const prices = response.data.prices.map(([timestamp, price]) => ({
           timestamp,
           price,
         }));
-
         setChartData(prices);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, []);
 
